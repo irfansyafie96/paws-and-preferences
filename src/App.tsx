@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { CardStack } from './components/CardStack'
 import { ActionButtons } from './components/ActionButtons'
+import { SummaryScreen } from './components/SummaryScreen'
+import { LoadingScreen } from './components/LoadingScreen'
 import type { Cat } from './types'
 
 function App() {
@@ -16,6 +18,19 @@ function App() {
     try {
       const response = await fetch('https://cataas.com/api/cats?limit=20');
       const data = await response.json();
+      
+      // Preload all cat images
+      await Promise.all(
+        data.map((cat: Cat) => {
+          return new Promise<void>((resolve) => {
+            const img = new Image();
+            img.src = `https://cataas.com/cat/${cat.id}`;
+            img.onload = () => resolve();
+            img.onerror = () => resolve(); // Continue even if fails
+          });
+        })
+      );
+      
       setCats(data);
     } catch (error) {
       console.error('Failed to fetch cats:', error);
@@ -55,26 +70,15 @@ function App() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-text-primary text-xl">Loading cats...</div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (isFinished) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-text-primary text-xl">
-          <p>You liked {likedCats.length} cats!</p>
-          <button
-            onClick={handlePlayAgain}
-            className="mt-4 px-6 py-2 bg-like text-white rounded-lg hover:scale-102 transition-transform"
-          >
-            Play Again
-          </button>
-        </div>
-      </div>
+      <SummaryScreen 
+        likedCats={likedCats} 
+        onPlayAgain={handlePlayAgain} 
+      />
     );
   }
 
