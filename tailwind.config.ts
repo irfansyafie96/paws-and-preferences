@@ -12,6 +12,9 @@ export default defineConfig({
       backgroundImage: {
         'soft-gradient': 'linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%)',
       },
+      fontFamily: {
+        sans: ['Fredoka', 'system-ui', 'sans-serif'],
+      },
     },
   },
 })

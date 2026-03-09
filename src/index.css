@@ -2,24 +2,24 @@
 
 :root {
   /* Font */
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Fredoka', system-ui, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   /* Colors */
   color-scheme: light;
-  
+
   /* Background gradient */
   --bg-gradient-start: #f5f7fa;
   --bg-gradient-end: #e8ecf1;
-  
+
   /* Accent colors */
   --color-like: #F9A8D4;
   --color-dislike: #FCA5A5;
-  
+
   /* Text */
   --text-primary: #374151;
-  
+
   /* Card */
   --card-bg: #FFFFFF;
 
