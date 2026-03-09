@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+:root {
+  /* Font */
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* Colors */
+  color-scheme: light;
+  
+  /* Background gradient */
+  --bg-gradient-start: #f5f7fa;
+  --bg-gradient-end: #e8ecf1;
+  
+  /* Accent colors */
+  --color-like: #F9A8D4;
+  --color-dislike: #FCA5A5;
+  
+  /* Text */
+  --text-primary: #374151;
+  
+  /* Card */
+  --card-bg: #FFFFFF;
+
+  color: var(--text-primary);
+  background-color: var(--bg-gradient-start);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
