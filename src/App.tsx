@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react'
-
-interface Cat {
-  id: string;
-  tags?: string[];
-}
+import { CardStack } from './components/CardStack'
+import type { Cat } from './types'
 
 function App() {
   const [cats, setCats] = useState<Cat[]>([]);
@@ -85,15 +82,12 @@ function App() {
       <div className="text-text-primary mb-4">
         Cat {currentIndex + 1} of {cats.length}
       </div>
-      <div className="text-text-primary">
-        <p>Cat ID: {cats[currentIndex].id}</p>
-        <p>Tags: {cats[currentIndex].tags?.join(', ') || 'No tags'}</p>
-        <img
-          src={`https://cataas.com/cat/${cats[currentIndex].id}`}
-          alt="Cat"
-          className="w-64 h-64 object-cover rounded-lg mt-4"
-        />
-      </div>
+      <CardStack
+        cats={cats}
+        currentIndex={currentIndex}
+        onLike={handleLike}
+        onDislike={handleDislike}
+      />
       <div className="flex gap-4 mt-6">
         <button
           onClick={handleDislike}
