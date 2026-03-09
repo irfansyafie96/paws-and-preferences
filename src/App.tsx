@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { CardStack } from './components/CardStack'
+import { ActionButtons } from './components/ActionButtons'
 import type { Cat } from './types'
 
 function App() {
@@ -88,20 +89,7 @@ function App() {
         onLike={handleLike}
         onDislike={handleDislike}
       />
-      <div className="flex gap-4 mt-6">
-        <button
-          onClick={handleDislike}
-          className="px-6 py-3 bg-dislike text-white rounded-lg hover:scale-102 transition-transform"
-        >
-          Dislike
-        </button>
-        <button
-          onClick={handleLike}
-          className="px-6 py-3 bg-like text-white rounded-lg hover:scale-102 transition-transform"
-        >
-          Like
-        </button>
-      </div>
+      <ActionButtons onLike={handleLike} onDislike={handleDislike} />
     </div>
   );
 }
