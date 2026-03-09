@@ -1,8 +1,8 @@
 import { Button } from './Button';
 
 interface ActionButtonsProps {
-  onLike: () => void;
-  onDislike: () => void;
+  onLike: (setTrigger?: boolean) => void;
+  onDislike: (setTrigger?: boolean) => void;
 }
 
 export function ActionButtons({ onLike, onDislike }: ActionButtonsProps) {

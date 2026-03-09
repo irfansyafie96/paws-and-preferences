@@ -5,11 +5,12 @@ import { SwipeCard } from './SwipeCard';
 interface CardStackProps {
   cats: Cat[];
   currentIndex: number;
-  onLike: () => void;
-  onDislike: () => void;
+  onLike: (setTrigger?: boolean) => void;
+  onDislike: (setTrigger?: boolean) => void;
+  triggerSwipe?: 'left' | 'right' | null;
 }
 
-export function CardStack({ cats, currentIndex, onLike, onDislike }: CardStackProps) {
+export function CardStack({ cats, currentIndex, onLike, onDislike, triggerSwipe }: CardStackProps) {
   const currentCat = cats[currentIndex];
   const nextCat = cats[currentIndex + 1];
 
@@ -23,6 +24,7 @@ export function CardStack({ cats, currentIndex, onLike, onDislike }: CardStackPr
             onLike={onLike}
             onDislike={onDislike}
             isTopCard={true}
+            triggerSwipe={triggerSwipe}
           />
         )}
       </AnimatePresence>

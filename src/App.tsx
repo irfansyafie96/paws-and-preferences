@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { CardStack } from './components/CardStack'
 import { ActionButtons } from './components/ActionButtons'
 import { SummaryScreen } from './components/SummaryScreen'
@@ -9,16 +9,17 @@ function App() {
   const [cats, setCats] = useState<Cat[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [likedCats, setLikedCats] = useState<Cat[]>([]);
-  const [dislikedCats, setDislikedCats] = useState<Cat[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isFinished, setIsFinished] = useState(false);
+  const [swipeTrigger, setSwipeTrigger] = useState<'left' | 'right' | null>(null);
+  const isSwiping = useRef(false);
 
   const fetchCats = async () => {
     setIsLoading(true);
     try {
       const response = await fetch('https://cataas.com/api/cats?limit=20');
       const data = await response.json();
-      
+
       // Preload all cat images
       await Promise.all(
         data.map((cat: Cat) => {
@@ -30,7 +31,7 @@ function App() {
           });
         })
       );
-      
+
       setCats(data);
     } catch (error) {
       console.error('Failed to fetch cats:', error);
@@ -43,6 +44,16 @@ function App() {
     fetchCats();
   }, []);
 
+  // Reset swipe trigger after animation completes
+  useEffect(() => {
+    if (swipeTrigger) {
+      const timer = setTimeout(() => {
+        setSwipeTrigger(null);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [swipeTrigger]);
+
   const advanceToNextCat = () => {
     if (currentIndex < cats.length - 1) {
       setCurrentIndex(prev => prev + 1);
@@ -51,20 +62,36 @@ function App() {
     }
   };
 
-  const handleLike = () => {
+  const handleLike = (setTrigger = true) => {
+    if (isSwiping.current) return;
+    isSwiping.current = true;
+    if (setTrigger) {
+      setSwipeTrigger('right');
+    }
     setLikedCats(prev => [...prev, cats[currentIndex]]);
-    advanceToNextCat();
+    setTimeout(() => {
+      advanceToNextCat();
+      setSwipeTrigger(null);
+      isSwiping.current = false;
+    }, 300);
   };
 
-  const handleDislike = () => {
-    setDislikedCats(prev => [...prev, cats[currentIndex]]);
-    advanceToNextCat();
+  const handleDislike = (setTrigger = true) => {
+    if (isSwiping.current) return;
+    isSwiping.current = true;
+    if (setTrigger) {
+      setSwipeTrigger('left');
+    }
+    setTimeout(() => {
+      advanceToNextCat();
+      setSwipeTrigger(null);
+      isSwiping.current = false;
+    }, 300);
   };
 
   const handlePlayAgain = () => {
     setCurrentIndex(0);
     setLikedCats([]);
-    setDislikedCats([]);
     setIsFinished(false);
     fetchCats();
   };
@@ -92,6 +119,7 @@ function App() {
         currentIndex={currentIndex}
         onLike={handleLike}
         onDislike={handleDislike}
+        triggerSwipe={swipeTrigger}
       />
       <ActionButtons onLike={handleLike} onDislike={handleDislike} />
     </div>
