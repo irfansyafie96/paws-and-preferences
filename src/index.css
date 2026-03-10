@@ -45,6 +45,19 @@ body {
     var(--bg-gradient-end) 100%
   );
   position: relative;
+  overflow: hidden;
+}
+
+/* Hide scrollbars */
+html, body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none;
 }
 
 /* Paw print pattern overlay */
