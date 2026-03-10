@@ -1,73 +1,148 @@
-# React + TypeScript + Vite
+# Paws & Preferences 🐱
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Find Your Favourite Kitty**
 
-Currently, two official plugins are available:
+A Tinder-style cat discovery app where you swipe through cute cat photos to find the ones you love.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Why I Built This
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+This project was built as a technical assessment, but I wanted to make something I would actually be proud to show.
 
-## Expanding the ESLint configuration
+### The Challenge
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+The original requirements were simple:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Single-page app with cat images
+- Swipe right to like, left to dislike
+- Show summary of liked cats
+- Source images from Cataas API
+- Work smoothly on mobile devices
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### My Approach
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Rather than just meeting the requirements, I focused on:
+
+1. **Quality over quantity** - Instead of adding many features, I made the core experience polished and delightful
+
+2. **Mobile-first thinking** - The app is designed for touch gestures first, with button alternatives for accessibility
+
+3. **Smooth animations** - I used Framer Motion for fluid, natural-feeling interactions that make swiping feel satisfying
+
+4. **Minimalist design** - Clean, flat design with soft colors creates a pleasant experience without visual clutter
+
+---
+
+## Design Decisions
+
+### Typography: Fredoka
+
+I chose **Fredoka** from Google Fonts because:
+
+- It's cute and playful, matching the fun cat theme
+- Rounded letters feel friendly and approachable
+- Still highly readable despite being a display font
+
+### Color Scheme
+
+- **Soft pink (#F9A8D4)** for likes - warm, positive feeling
+- **Muted red (#FCA5A5)** for dislikes - gentle, not harsh
+- **Dark gray (#374151)** for text - readable without being stark black
+
+### Paw Print Background
+
+Added a subtle paw print pattern to:
+
+- Reinforce the cat theme without being overwhelming
+- Keep it playful but minimal (6% opacity)
+
+---
+
+## Technical Implementation
+
+### Tech Stack
+
+- **React 19** - Modern React with latest features
+- **TypeScript** - Type safety throughout
+- **Vite** - Fast build tool and dev server
+- **Tailwind CSS v4** - Utility-first styling with CSS variables
+- **Framer Motion** - Smooth animations and gestures
+
+### Key Technical Choices
+
+**Cataas API + Image Preloading**
+
+The Cataas API provides cute cat images, but they can be slow to load. I implemented image preloading during the loading screen so swiping feels instant.
+
+**Custom Swipe Hook**
+
+Extracted swipe logic into `useSwipeCard` hook following SOLID principles - single responsibility and DRY code.
+
+**Race Condition Prevention**
+
+Added `isSwiping` ref to prevent duplicate state updates when users swipe rapidly.
+
+---
+
+## Features
+
+- ✅ Swipe right to like, left to dislike
+- ✅ Touch gestures optimized for mobile
+- ✅ Alternative buttons for accessibility
+- ✅ Image preloading for instant swipes
+- ✅ Animated summary screen with floating cats
+- ✅ Responsive design for all screen sizes
+- ✅ No scrollbars for cleaner mobile experience
+
+---
+
+## Running the Project
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Live Demo
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+🔗 [https://irfansyafie96.github.io/paws-and-preferences/](https://irfansyafie96.github.io/paws-and-preferences/)
+
+---
+
+## What I Learned
+
+This project taught me:
+
+- Building smooth gesture-based interactions
+- Working with external APIs (Cataas)
+- Mobile-first CSS and touch optimization
+- Animation timing and easing choices
+- State management for real-time interactions
+
+---
+
+## Future Improvements
+
+Areas I'd love to improve:
+
+- Keyboard navigation and ARIA labels for better accessibility
+- Error handling for API failures
+- Offline support with service workers
+
+---
+
+## License
+
+MIT
