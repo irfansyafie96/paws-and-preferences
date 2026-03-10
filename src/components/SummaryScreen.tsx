@@ -1,5 +1,13 @@
-import { motion } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
 import type { Cat } from '../types';
+
+interface FloatingCat {
+  cat: Cat;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+}
 
 interface SummaryScreenProps {
   likedCats: Cat[];
@@ -7,17 +15,70 @@ interface SummaryScreenProps {
 }
 
 export function SummaryScreen({ likedCats, onPlayAgain }: SummaryScreenProps) {
-  const radius = 120;
-  const imageSize = 64;
+  const [floatingCats, setFloatingCats] = useState<FloatingCat[]>([]);
+  const circleRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number | undefined>(undefined);
+  const imageSize = 56;
+
+  const circleRadius = 128;
+  const boundaryRadius = circleRadius - imageSize / 2;
+
+  useEffect(() => {
+    if (likedCats.length === 0) return;
+
+    const initialCats: FloatingCat[] = likedCats.map(cat => {
+      const angle = Math.random() * 2 * Math.PI;
+      const distance = Math.random() * boundaryRadius;
+      return {
+        cat,
+        x: Math.cos(angle) * distance,
+        y: Math.sin(angle) * distance,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8,
+      };
+    });
+
+    setFloatingCats(initialCats);
+
+    const animate = () => {
+      setFloatingCats(prev => prev.map(cat => {
+        let { x, y, vx, vy } = cat;
+
+        x += vx;
+        y += vy;
+
+        const distance = Math.sqrt(x * x + y * y);
+        if (distance > boundaryRadius) {
+          const angle = Math.atan2(y, x);
+          x = Math.cos(angle) * boundaryRadius;
+          y = Math.sin(angle) * boundaryRadius;
+          
+          const dotProduct = vx * Math.cos(angle) + vy * Math.sin(angle);
+          vx = vx - 2 * dotProduct * Math.cos(angle);
+          vy = vy - 2 * dotProduct * Math.sin(angle);
+        }
+
+        return { ...cat, x, y, vx, vy };
+      }));
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [likedCats.length]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8">
-      {/* Header */}
       <h1 className="text-3xl font-bold text-text-primary mb-8">
         You liked {likedCats.length} cats! 🎉
       </h1>
 
-      {/* Empty State */}
       {likedCats.length === 0 ? (
         <div className="flex flex-col items-center">
           <p className="text-text-primary text-lg mb-8 text-center">
@@ -25,44 +86,36 @@ export function SummaryScreen({ likedCats, onPlayAgain }: SummaryScreenProps) {
           </p>
         </div>
       ) : (
-        /* Rotating Circle Gallery */
-        <div className="relative w-64 h-64 md:w-96 md:h-96 mb-8">
-          <motion.div
-            className="absolute inset-0 flex items-center justify-center"
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 10, ease: 'linear' }}
-          >
-            {likedCats.map((cat, index) => {
-              const angle = (360 / likedCats.length) * index;
-              const radian = (angle * Math.PI) / 180;
-              const x = radius * Math.cos(radian);
-              const y = radius * Math.sin(radian);
-
-              return (
-                <motion.div
-                  key={cat.id}
-                  className="absolute rounded-full overflow-hidden shadow-md"
-                  style={{
-                    width: imageSize,
-                    height: imageSize,
-                    transform: `translate(${x - imageSize / 2}px, ${y - imageSize / 2}px)`,
-                  }}
-                  animate={{ rotate: -angle }}
-                  transition={{ repeat: Infinity, duration: 10, ease: 'linear' }}
-                >
-                  <img
-                    src={`https://cataas.com/cat/${cat.id}`}
-                    alt="Liked cat"
-                    className="w-full h-full object-cover"
-                  />
-                </motion.div>
-              );
-            })}
-          </motion.div>
+        <div 
+          ref={circleRef}
+          className="relative mb-8 rounded-full"
+          style={{ 
+            width: circleRadius * 2, 
+            height: circleRadius * 2,
+            border: '4px solid var(--circle-border)',
+          }}
+        >
+          {floatingCats.map(({ cat, x, y }) => (
+            <div
+              key={cat.id}
+              className="absolute rounded-full overflow-hidden shadow-md"
+              style={{
+                width: imageSize,
+                height: imageSize,
+                left: circleRadius - imageSize / 2 + x,
+                top: circleRadius - imageSize / 2 + y,
+              }}
+            >
+              <img
+                src={`https://cataas.com/cat/${cat.id}`}
+                alt="Liked cat"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ))}
         </div>
       )}
 
-      {/* Play Again Button */}
       <button
         onClick={onPlayAgain}
         className="px-8 py-3 bg-like text-text-primary rounded-lg 
